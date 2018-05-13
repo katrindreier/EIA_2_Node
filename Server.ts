@@ -31,7 +31,7 @@ namespace Server {
         
         _response.write("Ich habe dich gehört<br/>");
 
-        for (let key in query) 
+        for (var key in query) 
             console.log(query[key]);
 
         _response.write("Eingegebene Informationen: " + (query[key]) + "<br>");
