@@ -23,7 +23,6 @@ var Server;
         _response.write("Ich habe dich gehört<br/>");
         for (var key in query)
             console.log(query[key]);
-        _response.write("Eingegebene Informationen: " + (query[key]) + "<br>");
         _response.write("Ergebnis: " + (a + b));
         _response.end();
     }
