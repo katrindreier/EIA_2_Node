@@ -6,6 +6,7 @@ namespace Server {
     let port: number = process.env.PORT;        
     if (port == undefined)
         port = 8200;
+    
 
     interface AssocStringString {
         [key: string]: string;
@@ -58,7 +59,7 @@ namespace Server {
     }   
 
         function errorHandler(): void {
-            alert("Funktion nicht gefunden! "); 
+            alert("Funktion nicht gefunden!"); 
         }
         
         function insertRequest(query: AssocStringString, _response: Http.ServerResponse): void {

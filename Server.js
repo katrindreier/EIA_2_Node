@@ -33,7 +33,7 @@ var Server;
         _response.end();
     }
     function errorHandler() {
-        alert("Funktion nicht gefunden! ");
+        alert("Funktion nicht gefunden!");
     }
     function insertRequest(query, _response) {
         let obj = JSON.parse(query["data"]);
