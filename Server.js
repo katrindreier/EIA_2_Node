@@ -1,14 +1,14 @@
 "use strict";
 const Http = require("http");
 const Url = require("url");
-// IMPORT HAT BEI MIR NICHT FUNKTIONIERT
 var Server;
 (function (Server) {
-    // Homogenes assoziatives Array zur Speicherung einer Person unter der Matrikelnummer
-    let studiHomoAssoc = {};
+    //definiere Server Port
     let port = process.env.PORT;
     if (port == undefined)
         port = 8200;
+    // Homogenes assoziatives Array zur Speicherung einer Person unter der Matrikelnummer
+    let studiHomoAssoc = {};
     let server = Http.createServer((_request, _response) => {
         _response.setHeader("content-type", "text/html; charset=utf-8");
         _response.setHeader("Access-Control-Allow-Origin", "*");
@@ -16,7 +16,6 @@ var Server;
     server.addListener("request", handleRequest);
     server.listen(port);
     function handleRequest(_request, _response) {
-        console.log("Ich höre Stimmen!");
         let query = Url.parse(_request.url, true).query;
         console.log(query["command"]);
         if (query["command"]) {
@@ -54,7 +53,7 @@ var Server;
             subject: _subject
         };
         studiHomoAssoc[matrikel] = studi;
-        _response.write("Daten empfangen");
+        _response.write("Daten gespeichtert");
     }
     function refresh(_response) {
         console.log(studiHomoAssoc);

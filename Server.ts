@@ -1,8 +1,11 @@
 import * as Http from "http";
 import * as Url from "url";
 
-// IMPORT HAT BEI MIR NICHT FUNKTIONIERT
 namespace Server {
+    //definiere Server Port
+    let port: number = process.env.PORT;        
+    if (port == undefined)
+        port = 8200;
 
     interface AssocStringString {
         [key: string]: string;
@@ -21,14 +24,10 @@ namespace Server {
     interface Studis {
         [matrikel: string]: Studi;
     }
-    
-
+   
     // Homogenes assoziatives Array zur Speicherung einer Person unter der Matrikelnummer
     let studiHomoAssoc: Studis = {};
-    let port: number = process.env.PORT;
-    if (port == undefined)
-        port = 8200;
-
+   
     let server: Http.Server = Http.createServer((_request: Http.IncomingMessage, _response: Http.ServerResponse) => {
         _response.setHeader("content-type", "text/html; charset=utf-8");
         _response.setHeader("Access-Control-Allow-Origin", "*");
@@ -37,7 +36,6 @@ namespace Server {
     server.listen(port);
 
     function handleRequest(_request: Http.IncomingMessage, _response: Http.ServerResponse): void {
-        console.log("Ich höre Stimmen!");
         let query: AssocStringString = Url.parse(_request.url, true).query;
         console.log(query["command"]);
         if (query["command"] ) {
@@ -80,7 +78,7 @@ namespace Server {
                 subject: _subject
             };  
             studiHomoAssoc[matrikel] = studi;
-            _response.write("Daten empfangen");
+            _response.write("Daten gespeichtert");
             }
 
         function refresh(_response: Http.ServerResponse): void {
