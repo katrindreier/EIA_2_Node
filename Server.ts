@@ -32,35 +32,35 @@ namespace Server {
         _response.setHeader("content-type", "text/html; charset=utf-8");
         _response.setHeader("Access-Control-Allow-Origin", "*");
     });
-    server.addListener("request", handleRequest);
+    server.addListener("request", clientRequest);
     server.listen(port);
 
-    function handleRequest(_request: Http.IncomingMessage, _response: Http.ServerResponse): void {
-        let query: AssocStringString = Url.parse(_request.url, true).query;
-        console.log(query["command"]);
-        if (query["command"] ) {
-            switch (query["command"] ) {
-                case "insert": 
-                    insert(query, _response);
-                    break;
-                 
-                case "refresh":
-                    refresh(_response);
-                    break;
-                    
-                case "search":
-                    search(query, _response);
-                    break;
-               
-                default: 
-                    error();
-            } 
+    function clientRequest(_request: Http.IncomingMessage, _response: Http.ServerResponse): void {
+        let clientQuery: AssocStringString = Url.parse(_request.url, true).query;
+        console.log(clientQuery["command"]);
+                
+        if (clientQuery["command"] == "insert") {
+            insertRequest(clientQuery, _response);
         }
+        else if (clientQuery["command"] == "refresh") {
+            refreshRequest(_response);
+        }
+        else if (clientQuery["command"] == "search") {
+             searchRequest(clientQuery, _response);
+        }            
+        else {
+             errorHandler();
+        } 
+        
         _response.end();    
         
-    }      
+    }   
+
+        function errorHandler(): void {
+            alert("Funktion nicht gefunden! "); 
+        }
         
-        function insert(query: AssocStringString, _response: Http.ServerResponse): void {
+        function insertRequest(query: AssocStringString, _response: Http.ServerResponse): void {
             let obj: Studi = JSON.parse(query["data"]);
             let _name: string = obj.name;
             let _firstname: string = obj.firstname;  
@@ -78,36 +78,35 @@ namespace Server {
                 subject: _subject
             };  
             studiHomoAssoc[matrikel] = studi;
-            _response.write("Daten gespeichtert");
-            }
+            _response.write("Daten in Datenbank gespeichtert");
+         }
 
-        function refresh(_response: Http.ServerResponse): void {
+        function refreshRequest(_response: Http.ServerResponse): void {
             console.log(studiHomoAssoc);
             for (let matrikel in studiHomoAssoc) {  
-            let studi: Studi = studiHomoAssoc[matrikel];
-            let line: string = matrikel + ": ";
-            line += studi.subject + ", " + studi.name + ", " + studi.firstname + ", " + studi.age + " Jahre ";
-            line += studi.gender ? "(M)" : "(F)"; 
-            _response.write(line + "\n");                                          
-            }
+                let studi: Studi = studiHomoAssoc[matrikel];
+                let line: string = matrikel + ": ";
+                line += studi.subject + ", " + studi.name + ", " + studi.firstname + ", " + studi.age + " Jahre, ";
+                line += studi.gender ? "Male" : "Female"; 
+                line += "\n";
+                _response.write(line); 
+            }                                         
+            
+            
+           
         } 
         
-        function search(query: AssocStringString, _response: Http.ServerResponse): void {
+        function searchRequest(query: AssocStringString, _response: Http.ServerResponse): void {
             let studi: Studi = studiHomoAssoc[query["searchFor"]];
             if (studi) {
                 let line: string = query["searchFor"] + ": ";
                 line += studi.subject + ", " + studi.name + ", " + studi.firstname + ", " + studi.age + " Jahre ";
-                line += studi.gender ? "(M)" : "(F)";
+                line += studi.gender ? "Male" : "Female";                 
                 _response.write(line);
-            } else {
-                _response.write("No Match");    
+            } 
+            else {
+                _response.write("Keine Daten in Datenbank gefunden!");    
             }    
         }
-        
-        function error(): void {
-            alert("Error"); 
-        }
 
-        
-    
 }

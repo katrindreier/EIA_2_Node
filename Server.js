@@ -13,29 +13,29 @@ var Server;
         _response.setHeader("content-type", "text/html; charset=utf-8");
         _response.setHeader("Access-Control-Allow-Origin", "*");
     });
-    server.addListener("request", handleRequest);
+    server.addListener("request", clientRequest);
     server.listen(port);
-    function handleRequest(_request, _response) {
-        let query = Url.parse(_request.url, true).query;
-        console.log(query["command"]);
-        if (query["command"]) {
-            switch (query["command"]) {
-                case "insert":
-                    insert(query, _response);
-                    break;
-                case "refresh":
-                    refresh(_response);
-                    break;
-                case "search":
-                    search(query, _response);
-                    break;
-                default:
-                    error();
-            }
+    function clientRequest(_request, _response) {
+        let clientQuery = Url.parse(_request.url, true).query;
+        console.log(clientQuery["command"]);
+        if (clientQuery["command"] == "insert") {
+            insertRequest(clientQuery, _response);
+        }
+        else if (clientQuery["command"] == "refresh") {
+            refreshRequest(_response);
+        }
+        else if (clientQuery["command"] == "search") {
+            searchRequest(clientQuery, _response);
+        }
+        else {
+            errorHandler();
         }
         _response.end();
     }
-    function insert(query, _response) {
+    function errorHandler() {
+        alert("Funktion nicht gefunden! ");
+    }
+    function insertRequest(query, _response) {
         let obj = JSON.parse(query["data"]);
         let _name = obj.name;
         let _firstname = obj.firstname;
@@ -53,32 +53,30 @@ var Server;
             subject: _subject
         };
         studiHomoAssoc[matrikel] = studi;
-        _response.write("Daten gespeichtert");
+        _response.write("Daten in Datenbank gespeichtert");
     }
-    function refresh(_response) {
+    function refreshRequest(_response) {
         console.log(studiHomoAssoc);
         for (let matrikel in studiHomoAssoc) {
             let studi = studiHomoAssoc[matrikel];
             let line = matrikel + ": ";
-            line += studi.subject + ", " + studi.name + ", " + studi.firstname + ", " + studi.age + " Jahre ";
-            line += studi.gender ? "(M)" : "(F)";
-            _response.write(line + "\n");
+            line += studi.subject + ", " + studi.name + ", " + studi.firstname + ", " + studi.age + " Jahre, ";
+            line += studi.gender ? "Male" : "Female";
+            line += "\n";
+            _response.write(line);
         }
     }
-    function search(query, _response) {
+    function searchRequest(query, _response) {
         let studi = studiHomoAssoc[query["searchFor"]];
         if (studi) {
             let line = query["searchFor"] + ": ";
             line += studi.subject + ", " + studi.name + ", " + studi.firstname + ", " + studi.age + " Jahre ";
-            line += studi.gender ? "(M)" : "(F)";
+            line += studi.gender ? "Male" : "Female";
             _response.write(line);
         }
         else {
-            _response.write("No Match");
+            _response.write("Keine Daten in Datenbank gefunden!");
         }
-    }
-    function error() {
-        alert("Error");
     }
 })(Server || (Server = {}));
 //# sourceMappingURL=Server.js.map
