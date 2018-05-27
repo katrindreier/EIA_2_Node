@@ -1,4 +1,4 @@
-import * as Http from "http";
+import * as Http from "http"; 
 import * as Url from "url";
 
 namespace Server {
@@ -11,6 +11,7 @@ namespace Server {
         [key: string]: string;
     }
 
+    
     interface Studi {
         name: string;
         firstname: string;
@@ -80,6 +81,7 @@ namespace Server {
             studiHomoAssoc[matrikel] = studi;
             _response.write("Daten in Datenbank gespeichtert");
          }
+   
 
         function refreshRequest(_response: Http.ServerResponse): void {
             console.log(studiHomoAssoc);
