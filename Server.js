@@ -53,7 +53,7 @@ var Server;
             subject: _subject
         };
         studiHomoAssoc[matrikel] = studi;
-        _response.write("Daten in Datenbank gespeichtert");
+        _response.write("Daten in Datenbank gespeichtert!");
     }
     function refreshRequest(_response) {
         console.log(studiHomoAssoc);
