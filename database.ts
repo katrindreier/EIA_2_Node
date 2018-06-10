@@ -1,8 +1,14 @@
+
+
 import * as Mongo from "mongodb";
+import * as Server from "./Server";
+
 console.log("Database starting");
 
+
+
 let databaseURL: string = "mongodb://localhost:27017";
-let databaseName: string = "Test";
+let databaseName: string = "eia2";
 let db: Mongo.Db;
 let students: Mongo.Collection;
 
