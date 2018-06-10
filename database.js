@@ -1,3 +1,5 @@
+///<reference path="node.d.ts"/>
+///<reference path="mongodb.d.ts"/>
 "use strict";
 const Mongo = require("mongodb");
 console.log("Database starting");
