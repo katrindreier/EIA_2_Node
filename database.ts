@@ -6,7 +6,7 @@ import * as Server from "./Server";
 console.log( "Database starting" );
 
 let databaseURL: string = "mongodb://localhost:27017";
-let databaseName: string = "database_mongodb";
+let databaseName: string = "eia2";
 let db: Mongo.Db;
 let students: Mongo.Collection;
 

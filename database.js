@@ -2,7 +2,7 @@
 const Mongo = require("mongodb");
 console.log("Database starting");
 let databaseURL = "mongodb://localhost:27017";
-let databaseName = "database_mongodb";
+let databaseName = "eia2";
 let db;
 let students;
 if (process.env.NODE_ENV == "production") {
