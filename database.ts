@@ -1,5 +1,4 @@
-///<reference path="node.d.ts"/>
-///<reference path="mongodb.d.ts"/>
+
 
 import * as Mongo from "mongodb";
 import * as Server from "./Server";

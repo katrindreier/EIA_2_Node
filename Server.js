@@ -6,12 +6,33 @@ const Database = require("./Database");
 let port = process.env.PORT;
 if (port == undefined)
     port = 8200;
-// Homogenes assoziatives Array zur Speicherung einer Person unter der Matrikelnummer
-let studiHomoAssoc = {};
+/*
+    interface AssocStringString {
+        [key: string]: string;
+    }
+
+    
+    interface Studi {
+        name: string;
+        firstname: string;
+        matrikel: number;
+        age: number;
+        gender: boolean;
+        subject: string;
+    }
+*/
+// Struktur des homogenen assoziativen Arrays, bei dem ein Datensatz der Matrikelnummer zugeordnet ist
+/*  interface Studis {
+      [matrikel: string]: Studi;
+  }
+ 
+  // Homogenes assoziatives Array zur Speicherung einer Person unter der Matrikelnummer
+  let studiHomoAssoc: Studis = {};
+ 
 /*   let server: Http.Server = Http.createServer((_request: Http.IncomingMessage, _response: Http.ServerResponse) => {
-       _response.setHeader("content-type", "text/html; charset=utf-8");
-       _response.setHeader("Access-Control-Allow-Origin", "*");
-   });*/
+      _response.setHeader("content-type", "text/html; charset=utf-8");
+      _response.setHeader("Access-Control-Allow-Origin", "*");
+  });*/
 let server = Http.createServer();
 server.addListener("request", handleRequest);
 server.listen(port);

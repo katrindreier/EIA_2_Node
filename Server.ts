@@ -4,6 +4,7 @@ import * as Database from "./Database";
 
 
     //definiere Server Port
+
     let port: number = process.env.PORT;        
     if (port == undefined)
         port = 8200;
@@ -24,7 +25,7 @@ import * as Database from "./Database";
     }
 */
     // Struktur des homogenen assoziativen Arrays, bei dem ein Datensatz der Matrikelnummer zugeordnet ist
-    interface Studis {
+  /*  interface Studis {
         [matrikel: string]: Studi;
     }
    
