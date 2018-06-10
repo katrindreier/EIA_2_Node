@@ -8,7 +8,7 @@ import * as Database from "./Database";
     if (port == undefined)
         port = 8200;
     
-
+/*
     interface AssocStringString {
         [key: string]: string;
     }
@@ -22,7 +22,7 @@ import * as Database from "./Database";
         gender: boolean;
         subject: string;
     }
-
+*/
     // Struktur des homogenen assoziativen Arrays, bei dem ein Datensatz der Matrikelnummer zugeordnet ist
     interface Studis {
         [matrikel: string]: Studi;
@@ -43,7 +43,6 @@ import * as Database from "./Database";
  
 
    function handleRequest(_request: Http.IncomingMessage, _response: Http.ServerResponse): void {
-        console.log("Ich höre Stimmen!");
         let query: AssocStringString = Url.parse(_request.url, true).query;
         console.log(query["command"]);
         if (query["command"] ) {
@@ -86,7 +85,7 @@ import * as Database from "./Database";
                 subject: _subject
             };  
             Database.insert(studi);
-            respond(_response, "Daten empfangen");
+            respond(_response, "Daten in DB gespeichert");
             }
 
         function refresh(_response: Http.ServerResponse): void {

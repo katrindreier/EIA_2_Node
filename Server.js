@@ -21,23 +21,20 @@ function handleRequest(_request, _response) {
     if (query["command"]) {
         switch (query["command"]) {
             case "insert":
-                insertRequest(query, _response);
+                insert(query, _response);
                 break;
             case "refresh":
-                refreshRequest(_response);
+                refresh(_response);
                 break;
             case "search":
-                searchRequest(query, _response);
+                search(query, _response);
                 break;
             default:
-                errorHandler();
+                error();
         }
     }
 }
-function errorHandler() {
-    alert("Funktion nicht gefunden!");
-}
-function insertRequest(query, _response) {
+function insert(query, _response) {
     let obj = JSON.parse(query["data"]);
     let _name = obj.name;
     let _firstname = obj.firstname;
@@ -54,32 +51,22 @@ function insertRequest(query, _response) {
         gender: _gender,
         subject: _subject
     };
-    studiHomoAssoc[matrikel] = studi;
     Database.insert(studi);
-    _response.write("Daten in Datenbank gespeichtert!");
+    respond(_response, "Daten in DB gespeichert");
 }
-function refreshRequest(_response) {
-    console.log(studiHomoAssoc);
-    for (let matrikel in studiHomoAssoc) {
-        let studi = studiHomoAssoc[matrikel];
-        let line = matrikel + ": ";
-        line += studi.subject + ", " + studi.name + ", " + studi.firstname + ", " + studi.age + " Jahre, ";
-        line += studi.gender ? "Male" : "Female";
-        line += "\n";
-        _response.write(line);
-    }
+function refresh(_response) {
+    Database.findAll(function (json) {
+        respond(_response, json);
+    });
 }
-function searchRequest(query, _response) {
-    let studi = studiHomoAssoc[query["searchFor"]];
-    if (studi) {
-        let line = query["searchFor"] + ": ";
-        line += studi.subject + ", " + studi.name + ", " + studi.firstname + ", " + studi.age + " Jahre ";
-        line += studi.gender ? "Male" : "Female";
-        _response.write(line);
-    }
-    else {
-        _response.write("Keine Daten in Datenbank gefunden!");
-    }
+function search(query, _response) {
+    let searchedMatrikel = parseInt(query["searchFor"]);
+    Database.findStudent(searchedMatrikel, function (json) {
+        respond(_response, json);
+    });
+}
+function error() {
+    alert("Error");
 }
 function respond(_response, _text) {
     _response.setHeader("content-type", "text/html; charset=utf-8");
