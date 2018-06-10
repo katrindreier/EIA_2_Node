@@ -5,11 +5,13 @@ let databaseURL = "mongodb://localhost:27017";
 let databaseName = "eia2";
 let db;
 let students;
+// wenn wir auf heroku sind...
 if (process.env.NODE_ENV == "production") {
     //    databaseURL = "mongodb://username:password@hostname:port/database";
     databaseURL = "mongodb://Katrin3:Test123@ds245680.mlab.com:45680/eia2";
     databaseName = "eia2";
 }
+// handleConnect wird aufgerufen wenn der Versuch, die Connection zur Datenbank herzustellen, erfolgte
 Mongo.MongoClient.connect(databaseURL, handleConnect);
 function handleConnect(_e, _db) {
     if (_e)
@@ -20,49 +22,40 @@ function handleConnect(_e, _db) {
         students = db.collection("students");
     }
 }
-function insert(_student) {
-    let _name = _student.name;
-    let _firstname = _student.firstname;
-    let matrikel = _student.matrikel.toString();
-    let _age = _student.age;
-    let _gender = _student.gender;
-    let _subject = _student.subject;
-    let studi;
-    studi = {
-        name: _name,
-        firstname: _firstname,
-        matrikel: parseInt(matrikel),
-        age: _age,
-        gender: _gender,
-        subject: _subject
-    };
-    students.insertOne(studi, handleInsert);
+function insert(_doc) {
+    students.insertOne(_doc, handleInsert);
 }
 exports.insert = insert;
 function handleInsert(_e) {
     console.log("Database insertion returned -> " + _e);
 }
 function findAll(_callback) {
-    let cursor = students.find();
-    cursor.toArray((_e, _result) => {
+    var cursor = students.find();
+    cursor.toArray(prepareAnswer);
+    function prepareAnswer(_e, studentArray) {
         if (_e)
-            _callback("Da war ein Fehler " + _e, false);
+            _callback("Error" + _e);
         else
-            _callback(JSON.stringify(_result), true);
-    });
+            _callback(JSON.stringify(studentArray));
+    }
 }
 exports.findAll = findAll;
-function findStudent(_callback, matrikel) {
-    let cursor = students.find({ "matrikel": matrikel });
-    cursor.toArray((_e, _result) => {
-        if (_e)
-            _callback("Ich mag Fehler nicht :( " + _e, false);
-        else {
-            if (_result.length >= 1) {
-                _callback(JSON.stringify(_result[0]), true);
-            }
+function findStudent(searchedMatrikel, _callback) {
+    var cursor = students.find({ "matrikel": searchedMatrikel }).limit(1);
+    cursor.next(prepareAnswerStudent);
+    function prepareAnswerStudent(_e, studi) {
+        if (_e) {
+            _callback("Error" + _e);
         }
-    });
+        if (studi) {
+            let line = studi.matrikel + ": " + studi.subject + ", " + studi.name + ", " + studi.firstname + ", " + studi.age + ", ";
+            line += studi.gender ? "(M)" : "(F)";
+            _callback(line);
+        }
+        else {
+            _callback("No Match");
+        }
+    }
 }
 exports.findStudent = findStudent;
 //# sourceMappingURL=database.js.map
